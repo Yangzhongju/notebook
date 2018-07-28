@@ -1,0 +1,53 @@
+import requests
+from lxml import etree
+import re
+import queue
+from urllib.request import urlretrieve
+# 1获取视频id
+# 2拼接完整URL
+#3 获取视频播放地址
+#4下载视频
+def download():
+    url = 'http://www.pearvideo.com/category_9'
+    # 获取页面源代码
+    html = requests.get(url).text
+    # 把文本文件处理成可解析的对象
+    html = etree.HTML(html)
+    # print（html）
+    # <div class="vervideo-bd">
+    # <a href="video_138301" class="vervideo-lilink actplay">
+    video_id = html.xpath('//div[@class="vervideo-bd"]/a/@href')
+    #  列表
+    video_url = []
+    starturl = 'http://www.pearvideo.com'
+    # 拼接完整的URL
+    for id in video_id:
+      newurl = starturl + '/'+ id
+      video_url.append(newurl)
+        # print(video_url)
+        # 获取视频播放地址
+    for playurl in video_url:
+        # print(playurl)
+        # 获取页面源代码
+        html = requests.get(playurl).text
+        # print(html)
+        # 正则匹配
+        req = 'srcUrl="(.*?.mp4)"'
+        # 增加效率的
+        # req = re.compile(req)
+        # 视频真正播放URL  list
+        purl = re.findall(req,html)
+        print(purl)
+        # <hl class="video-tt">5球狂胜！东道主俄罗斯喜迎开门红</hl>
+        # 获取视频名称
+        req1='<h1 class="video-tt">(.*?)</h1>'
+        # req1='<h1 class="video-tt">(.*?)</h1>'
+        videoname = re.findall(req1, html)  # 获取视频名称的正则
+        print(videoname)
+        for i in videoname:
+           rstr = r"[\/\\\:\*\?\"\<\>\|\？]"  # '/ \ : * ? " < > | ？'
+        newName = re.sub(rstr, " ", i)  # 替换为空格
+        # print("正在下载视频:%s"%videoname)
+        # 下载的URL   下载的地址
+        # urlretrieve(purl[0],'./video/%s.mp4'%videoname[0])
+download()

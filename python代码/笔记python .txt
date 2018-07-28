@@ -1,0 +1,8 @@
+id  acquire:正则   从页面中  xpath    beautifulsoup
+列表获取元素用循环
+字典也用for循环
+多个查找正则
+
+
+pyinstaller -F -w xxx.py
+pyinstaller -F -w -i xx.ico xxx.py

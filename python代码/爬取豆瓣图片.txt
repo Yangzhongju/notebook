@@ -1,0 +1,33 @@
+import requests,time
+from bs4 import BeautifulSoup
+import urllib.request
+
+x = 0  # x是图片的名字 从0开始
+#注释
+#获取网站图片
+startTime=time.time()
+def getImg(page=1):
+    response=requests.get('https://www.dbmeinv.com/?pager_offset={}'.format(page))
+    html=response.text
+    #创建对象 解析网页 lxml也可以
+    soup = BeautifulSoup(html,'html.parser')
+    #找到img标签
+    girl = soup.find_all('img')
+    print(girl)
+    for i in girl:
+        global x
+        # print(i)#i是img的标签
+              #获取src路径
+        src = i.get('src')
+        # urllib.request.urlretrieve(src,'D://image/%s.jpg'%x)
+        x+=1
+        print('正在下载第%s张'%x)
+for i in range(1,11):
+    print('正在下载第{}页图片'.format(i))
+    getImg(i)
+endTime=time.time()
+print("used time is ", endTime - startTime)#!/usr/bin/python
+# -*- coding:utf-8 -*-
+# @Time   : 2018/7/11 7:19
+# @Author : liaochao
+# @File   : 豆瓣time.py
